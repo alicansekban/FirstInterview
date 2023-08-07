@@ -33,7 +33,8 @@ class DataMapper @Inject constructor() {
             sourceId = item.sourceId,
             title = item.title,
             url = item.url,
-            content = item.content
+            content = item.content,
+            id = item.id
         )
     }
 
@@ -48,7 +49,8 @@ class DataMapper @Inject constructor() {
                 sourceId = item.sourceId,
                 title = item.title,
                 url = item.url,
-                content = item.content
+                content = item.content,
+                id = item.id
             )
         }
     }

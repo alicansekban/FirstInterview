@@ -62,6 +62,7 @@ import com.example.caseapp.domain.Error
 import com.example.caseapp.domain.Loading
 import com.example.caseapp.domain.Success
 import com.example.caseapp.domain.model.ArticleUIModel
+import com.example.caseapp.utils.ScreenRoutes
 import com.example.caseapp.utils.toParsedString
 import java.util.Calendar
 import java.util.Date
@@ -111,7 +112,7 @@ fun stateLessHomeScreen(articles: List<ArticleUIModel>, onDateSelected: (Date, D
             onBackClick = { },
             showFilterButton = true
         ) {
-            showPicker = true
+            showPicker = !showPicker
         }
         if (showPicker) {
             CreatePicker { start, end ->
@@ -135,7 +136,10 @@ fun stateLessHomeScreen(articles: List<ArticleUIModel>, onDateSelected: (Date, D
                     article.title ?: ""
                 }) { value ->
                 NewsItem(value, openDetail ={
-                    openDetail(it)
+                    openDetail(ScreenRoutes.Detail.replace(
+                        oldValue = "{id}",
+                        newValue = it
+                    ))
                 } )
             }
         }
@@ -165,7 +169,7 @@ fun NewsItem(article: ArticleUIModel, openDetail: (String) -> Unit){
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { openDetail(article.sourceId.toString()) }
+            .clickable { openDetail(article.id.toString()) }
             .padding(vertical = 8.dp),
         shape = RoundedCornerShape(5.dp),
         elevation = CardDefaults.cardElevation(2.dp)
@@ -180,9 +184,7 @@ fun NewsItem(article: ArticleUIModel, openDetail: (String) -> Unit){
                     .fillMaxWidth()
                     .height(150.dp)
                     .background(MaterialTheme.colorScheme.secondary)
-            ) {
-
-            }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -230,12 +232,11 @@ fun NewsItem(article: ArticleUIModel, openDetail: (String) -> Unit){
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun loadImage(url: String, modifier: Modifier, onItemClick: () -> Unit) {
+fun loadImage(url: String, modifier: Modifier) {
 
 
     Card(
-        modifier = modifier
-            .clickable { onItemClick() },
+        modifier = modifier,
         shape = RoundedCornerShape(10.dp)
     ) {
         GlideImage(
