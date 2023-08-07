@@ -1,6 +1,6 @@
 package com.example.caseapp.utils
 
 object ScreenRoutes {
-    const val DetailScreenRoute = "detail/{id}"
-    const val ListScreenRoute = "list/{id}/{title}"
+    const val List = "list"
+    const val Detail = "detail/{id}"
 }
