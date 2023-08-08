@@ -23,8 +23,6 @@ class ArticleRepository @Inject constructor(
         val endDate = end ?: Date()
         return flow {
             emit(ResultWrapper.Loading)
-
-
             when (val apiData = remoteDataSource.getDataFromRemote(startDate, endDate)) {
                 is ResultWrapper.GenericError -> {
                     emit(ResultWrapper.GenericError())
