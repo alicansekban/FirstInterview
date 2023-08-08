@@ -13,10 +13,11 @@ import kotlinx.coroutines.flow.flow
 import java.util.Date
 import javax.inject.Inject
 
-class GetDataUseCase @Inject constructor(
-    private val repository: ArticleRepository,
+class GetArticleUseCase @Inject constructor(
+    private val articleRepository: ArticleRepository,
     private val dataMapper: DataMapper
 ) {
+
     operator fun invoke(
         startDate: Date?,
         endDate: Date?
@@ -24,22 +25,14 @@ class GetDataUseCase @Inject constructor(
         return flow {
             emit(Loading())
 
-            when (repository.getFromRemote(startDate, endDate)) {
-                is ResultWrapper.GenericError -> {
-                    emit(Error("Could not retrive the data from network"))
+            articleRepository.fetchData(startDate,endDate).collect{
+                when (it) {
+                    is ResultWrapper.GenericError -> { emit(Error("something went wrong"))}
+                    ResultWrapper.Loading -> {}
+                    ResultWrapper.NetworkError -> { emit(Error("could not retrive data from network"))}
+                    is ResultWrapper.Success -> emit(Success(dataMapper.mapListToUIModel(it.value)))
                 }
-
-                ResultWrapper.NetworkError -> {
-                    emit(Error("Network error occured"))
-                }
-
-                else -> {}
-
-            }
-            repository.getData(startDate, endDate).collect {
-                emit(Success(dataMapper.mapListToUIModel(it)))
             }
         }
     }
 }
-

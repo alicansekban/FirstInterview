@@ -2,11 +2,10 @@ package com.example.caseapp.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.caseapp.data.local.dbModel.ArticleEntity
 import com.example.caseapp.domain.BaseUIModel
 import com.example.caseapp.domain.Loading
 import com.example.caseapp.domain.model.ArticleUIModel
-import com.example.caseapp.domain.useCase.GetDataUseCase
+import com.example.caseapp.domain.useCase.GetArticleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +16,7 @@ import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val useCase: GetDataUseCase) : ViewModel() {
+class HomeViewModel @Inject constructor(private val useCase: GetArticleUseCase) : ViewModel() {
 
     private val _articles = MutableStateFlow<BaseUIModel<List<ArticleUIModel>>>(Loading())
     val articles: StateFlow<BaseUIModel<List<ArticleUIModel>>> get() = _articles
