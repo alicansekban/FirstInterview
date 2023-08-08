@@ -26,13 +26,9 @@ class DataMapper @Inject constructor() {
     fun mapToUIModel(item: ArticleEntity): ArticleUIModel {
         return ArticleUIModel(
             publishedAt = item.publishedAt,
-            author = item.author,
             urlToImage = item.urlToImage,
             description = item.description,
-            sourceName = item.sourceName,
-            sourceId = item.sourceId,
             title = item.title,
-            url = item.url,
             content = item.content,
             id = item.id
         )
@@ -42,13 +38,9 @@ class DataMapper @Inject constructor() {
         return items.map { item ->
             ArticleUIModel(
                 publishedAt = item.publishedAt,
-                author = item.author,
                 urlToImage = item.urlToImage,
                 description = item.description,
-                sourceName = item.sourceName,
-                sourceId = item.sourceId,
                 title = item.title,
-                url = item.url,
                 content = item.content,
                 id = item.id
             )
