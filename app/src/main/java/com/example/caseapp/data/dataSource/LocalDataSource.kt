@@ -1,8 +1,7 @@
 package com.example.caseapp.data.dataSource
 
 import com.example.caseapp.data.local.AppDataBase
-import com.example.caseapp.data.local.dao.DataDao
-import com.example.caseapp.data.local.dbModel.ArticleEntity
+import com.example.caseapp.data.local.model.ArticleEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 import javax.inject.Inject

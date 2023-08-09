@@ -2,7 +2,7 @@ package com.example.caseapp.data.repository
 
 import com.example.caseapp.data.dataSource.LocalDataSource
 import com.example.caseapp.data.dataSource.RemoteDataSource
-import com.example.caseapp.data.local.dbModel.ArticleEntity
+import com.example.caseapp.data.local.model.ArticleEntity
 import com.example.caseapp.domain.mapper.DataMapper
 import com.example.caseapp.utils.ResultWrapper
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +22,7 @@ class ArticleRepository @Inject constructor(
             start ?: Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -10) }.time
         val endDate = end ?: Date()
         return flow {
-            // burada yaptıığımız remote dan çekip db'ye ekleme işlemi
+            // burada yaptığımız remote dan çekip db'ye ekleme işlemi
             emit(ResultWrapper.Loading)
             when (val apiData = remoteDataSource.getDataFromRemote(startDate, endDate)) {
                 is ResultWrapper.GenericError -> {

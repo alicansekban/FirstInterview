@@ -1,14 +1,13 @@
-package com.example.caseapp.data.local.dbModel
+package com.example.caseapp.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import com.squareup.moshi.Json
 import java.util.*
 
 @Entity(tableName = "articles")
 data class ArticleEntity(
+    // kendimiz id ekliyoruz, detay ekranına giderken bu id üzerinden ulaşacağız article'a
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val publishedAt: Date? = null,

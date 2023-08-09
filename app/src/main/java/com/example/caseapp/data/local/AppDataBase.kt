@@ -5,8 +5,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.example.caseapp.data.local.dao.DataDao
-import com.example.caseapp.data.local.dbModel.ArticleEntity
-import com.example.caseapp.data.local.dbModel.Source
+import com.example.caseapp.data.local.model.ArticleEntity
+import com.example.caseapp.data.local.model.Source
 
 @Database(entities = [ArticleEntity::class], version = 1)
 @TypeConverters(SourceTypeConverter::class, Converters::class)

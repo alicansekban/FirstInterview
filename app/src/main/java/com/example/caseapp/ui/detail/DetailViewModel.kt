@@ -24,7 +24,7 @@ class DetailViewModel @Inject constructor(
 
     val id = checkNotNull(savedStateHandle.get<String>("id"))
     init {
-        // savedStateHandle aracılığı ile veri istek işlemini buradan yönetiyoruz, ui'a sadece sonucu gönderiyoruz.
+        // savedStateHandle aracılığı ile argümana ulaşıp veri istek işlemini buradan yönetiyoruz, ui'a sadece sonucu gönderiyoruz.
         getArticleDetail(id.toInt())
     }
 

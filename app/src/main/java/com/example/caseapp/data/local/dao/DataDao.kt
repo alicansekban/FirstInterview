@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.caseapp.data.local.dbModel.ArticleEntity
+import com.example.caseapp.data.local.model.ArticleEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 

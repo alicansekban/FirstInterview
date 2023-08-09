@@ -23,7 +23,6 @@ class GetArticleUseCase @Inject constructor(
         endDate: Date?
     ): Flow<BaseUIModel<List<ArticleUIModel>>> {
         return flow {
-            // başlangıç için loading gönderiyoruz progress gösterebilmek için
             emit(Loading())
 
             // repositoryden çektiğimiz result'u uimodel'imize çevirip gerekli dataları mapper yapıyoruz.
