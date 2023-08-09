@@ -1,4 +1,4 @@
-package com.example.caseapp.domain
+package com.example.caseapp.domain.model
 
 sealed class BaseUIModel<T>
 

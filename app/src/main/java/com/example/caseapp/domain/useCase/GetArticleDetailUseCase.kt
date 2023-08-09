@@ -1,9 +1,9 @@
 package com.example.caseapp.domain.useCase
 
 import com.example.caseapp.data.dataSource.LocalDataSource
-import com.example.caseapp.domain.BaseUIModel
-import com.example.caseapp.domain.Loading
-import com.example.caseapp.domain.Success
+import com.example.caseapp.domain.model.BaseUIModel
+import com.example.caseapp.domain.model.Loading
+import com.example.caseapp.domain.model.Success
 import com.example.caseapp.domain.mapper.DataMapper
 import com.example.caseapp.domain.model.ArticleUIModel
 import kotlinx.coroutines.flow.Flow

@@ -12,13 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.caseapp.domain.Error
-import com.example.caseapp.domain.Loading
-import com.example.caseapp.domain.Success
+import com.example.caseapp.domain.model.Error
+import com.example.caseapp.domain.model.Loading
+import com.example.caseapp.domain.model.Success
 import com.example.caseapp.domain.model.ArticleUIModel
 import com.example.caseapp.ui.home.TopBar
 import com.example.caseapp.ui.home.loadImage
@@ -46,16 +45,15 @@ fun DetailScreen(
 
 @Composable
 fun StatelessDetailScreen(article: ArticleUIModel,onBackPressed: (String) -> Unit) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         TopBar(
-            title = article.title.toString(),
-            showBackButton = true,
+            title = {article.title.toString()},
+            showBackButton = {true},
             onBackClick = {onBackPressed("-1") },
-            showFilterButton = false,
+            showFilterButton = {false},
             onFavoriteClick = {}
         )
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {

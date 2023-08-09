@@ -50,8 +50,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CaseAppTheme {
-
-
                 val navController = rememberNavController()
 
                 val navigation: (String) -> Unit = { route ->

@@ -2,8 +2,8 @@ package com.example.caseapp.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.caseapp.domain.BaseUIModel
-import com.example.caseapp.domain.Loading
+import com.example.caseapp.domain.model.BaseUIModel
+import com.example.caseapp.domain.model.Loading
 import com.example.caseapp.domain.model.ArticleUIModel
 import com.example.caseapp.domain.useCase.GetArticleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

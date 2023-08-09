@@ -26,6 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDateRangePickerState
@@ -36,14 +37,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -52,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
@@ -63,15 +61,14 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.caseapp.R
-import com.example.caseapp.domain.Error
-import com.example.caseapp.domain.Loading
-import com.example.caseapp.domain.Success
 import com.example.caseapp.domain.model.ArticleUIModel
+import com.example.caseapp.domain.model.Error
+import com.example.caseapp.domain.model.Loading
+import com.example.caseapp.domain.model.Success
 import com.example.caseapp.utils.ScreenRoutes
 import com.example.caseapp.utils.heightPercent
 import com.example.caseapp.utils.toParsedString
 import com.example.caseapp.utils.widthPercent
-import java.lang.reflect.Type
 import java.util.Calendar
 import java.util.Date
 
@@ -86,39 +83,30 @@ fun HomeScreen(
 
     when (articles) {
         is Error -> {
-            LoadingDialog(isShowingDialog = false)
+            LoadingDialog(isShowingDialog = { false })
             Toast.makeText(
                 context,
-                (articles as Error<List<ArticleUIModel>>).errorMessage ?: "error",
+                "An error occurred. Please try again.",
                 Toast.LENGTH_LONG
             ).show()
-            EmptyUI {
-                viewModel.getArticles(null, null)
-            }
-
         }
 
         is Loading -> {
-            LoadingDialog(isShowingDialog = true)
+            LoadingDialog(isShowingDialog = { true })
         }
 
         is Success -> {
-            LoadingDialog(isShowingDialog = false)
+            LoadingDialog(isShowingDialog = { false })
 
             val response = (articles as Success<List<ArticleUIModel>>).response
-            if (response.isNotEmpty()) {
-                stateLessHomeScreen(articles = response, onDateSelected = { start, end ->
-                    viewModel.getArticles(start, end)
-                }, openDetail = openDetail)
-            } else {
-                EmptyUI {
-                    viewModel.getArticles(null, null)
-                }
-            }
 
+            stateLessHomeScreen(articles = response, onDateSelected = { start, end ->
+                viewModel.getArticles(start, end)
+            }, openDetail = openDetail, resetData = { viewModel.getArticles(null, null) })
         }
 
     }
+
 }
 
 
@@ -126,56 +114,66 @@ fun HomeScreen(
 fun stateLessHomeScreen(
     articles: List<ArticleUIModel>,
     onDateSelected: (Date, Date) -> Unit,
-    openDetail: (String) -> Unit
+    openDetail: (String) -> Unit,
+    resetData: () -> Unit
 ) {
     val context = LocalContext.current
     var showPicker by remember {
         mutableStateOf(false)
     }
 
-    Column(modifier = Modifier) {
-        TopBar(
-            title = "News Headlines",
-            showBackButton = false,
-            onBackClick = { },
-            showFilterButton = true
-        ) {
-            showPicker = !showPicker
-        }
-        if (showPicker) {
-            CreatePicker { start, end ->
-                Toast.makeText(
-                    context,
-                    "Start Date ${start.toGMTString()} \nEnd Date ${end.toGMTString()}",
-                    Toast.LENGTH_LONG
-                ).show()
-                onDateSelected(start, end)
-                showPicker = false
+    Scaffold { padding ->
+        Column(modifier = Modifier.padding(padding)) {
+            TopBar(
+                title = { "News Headlines" },
+                showBackButton = { false },
+                onBackClick = { },
+                showFilterButton = { true }
+            ) {
+                showPicker = !showPicker
             }
-        }
+            if (showPicker) {
+                CreatePicker { start, end ->
+                    Toast.makeText(
+                        context,
+                        "Start Date ${start.toGMTString()} \nEnd Date ${end.toGMTString()}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    onDateSelected(start, end)
+                    showPicker = false
+                }
+            }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            items(
-                items = articles,
-                key = { article ->
-                    article.title ?: ""
-                }) { value ->
-                NewsItem(value, openDetail = {
-                    openDetail(
-                        ScreenRoutes.Detail.replace(
-                            oldValue = "{id}",
-                            newValue = it
-                        )
-                    )
-                })
+            if (articles.isNotEmpty()) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    items(
+                        items = articles,
+                        key = { article ->
+                            article.title ?: ""
+                        }) { value ->
+                        NewsItem(value, openDetail = {
+                            openDetail(
+                                ScreenRoutes.Detail.replace(
+                                    oldValue = "{id}",
+                                    newValue = it
+                                )
+                            )
+                        })
+                    }
+                }
+            } else {
+                EmptyUI { resetData() }
             }
+
+
         }
 
     }
+
 }
 
 @Composable
@@ -264,9 +262,9 @@ fun NewsItem(article: ArticleUIModel, openDetail: (String) -> Unit) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun loadImage(url: String, modifier: Modifier) {
-
-
+fun loadImage(
+    url: String, modifier: Modifier
+) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp)
@@ -296,23 +294,23 @@ fun EmptyUI(onGoBack: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Veriler bulunamadı.",
+            text = "No Results Found",
             fontSize = 18.sp,
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { onGoBack() }) {
-            Text(text = "Önceki Seçimlere Dön")
+            Text(text = "Reset Filters")
         }
     }
 }
 
 @Composable
 fun TopBar(
-    title: String,
-    showBackButton: Boolean,
+    title: () -> String,
+    showBackButton: () -> Boolean,
     onBackClick: () -> Unit,
-    showFilterButton: Boolean,
+    showFilterButton: () -> Boolean,
     onFavoriteClick: () -> Unit
 ) {
     Surface(
@@ -327,7 +325,7 @@ fun TopBar(
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (showBackButton) {
+            if (showBackButton()) {
                 IconButton(
                     onClick = { onBackClick() },
                     modifier = Modifier.size(40.dp)
@@ -341,7 +339,7 @@ fun TopBar(
             }
 
             Text(
-                text = title,
+                text = title(),
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 style = TextStyle(
@@ -352,7 +350,7 @@ fun TopBar(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            if (showFilterButton) {
+            if (showFilterButton()) {
                 IconButton(
                     onClick = { onFavoriteClick() },
                     modifier = Modifier.size(40.dp)
@@ -369,14 +367,13 @@ fun TopBar(
     }
 }
 
-
 @Composable
 fun LoadingDialog(
-    isShowingDialog: Boolean,
+    isShowingDialog: () -> Boolean,
     dismissOnBackPress: Boolean = false,
     dismissOnClickOutside: Boolean = false
 ) {
-    if (isShowingDialog) {
+    if (isShowingDialog()) {
         Dialog(
             onDismissRequest = { },
             DialogProperties(
@@ -390,9 +387,7 @@ fun LoadingDialog(
 }
 
 @Composable
-fun DialogContent(
-) {
-
+fun DialogContent() {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
     val progress by animateLottieCompositionAsState(
         composition,
@@ -442,6 +437,5 @@ fun DialogContent(
                 maxLines = 1,
             )
         }
-
     }
 }
