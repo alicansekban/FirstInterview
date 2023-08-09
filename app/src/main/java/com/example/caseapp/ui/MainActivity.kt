@@ -52,6 +52,7 @@ class MainActivity : ComponentActivity() {
             CaseAppTheme {
                 val navController = rememberNavController()
 
+                // navigation yapısında okunabilirliği arttırmak adına yapılmış bir value, bütün actionları daha düzenli yönetmek için yapıldı.
                 val navigation: (String) -> Unit = { route ->
                     if (route == "-1") {
                         navController.popBackStack()

@@ -19,6 +19,7 @@ import com.example.caseapp.domain.model.Error
 import com.example.caseapp.domain.model.Loading
 import com.example.caseapp.domain.model.Success
 import com.example.caseapp.domain.model.ArticleUIModel
+import com.example.caseapp.ui.home.LoadingDialog
 import com.example.caseapp.ui.home.TopBar
 import com.example.caseapp.ui.home.loadImage
 import com.example.caseapp.utils.toParsedString
@@ -31,9 +32,16 @@ fun DetailScreen(
     val article by viewModel.article.collectAsStateWithLifecycle()
 
     when (article) {
-        is Error -> {}
-        is Loading -> {}
+        is Error -> {
+            // bu ekranda error durumunu handle etmiyoruz, sadece db'den veri çekmek olduğu için çok detaylı bir yapı kurmaya gerek duyulmadı. O yüzden error durumu yönetilmiyor.
+        }
+
+        is Loading -> {
+            LoadingDialog(isShowingDialog = { true })
+        }
+
         is Success -> {
+            LoadingDialog(isShowingDialog = { false })
             val response = (article as Success<ArticleUIModel>).response
             StatelessDetailScreen(article = response, onBackPressed = {
                 onBackPressed(it)
@@ -44,19 +52,23 @@ fun DetailScreen(
 }
 
 @Composable
-fun StatelessDetailScreen(article: ArticleUIModel,onBackPressed: (String) -> Unit) {
+fun StatelessDetailScreen(article: ArticleUIModel, onBackPressed: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         TopBar(
-            title = {article.title.toString()},
-            showBackButton = {true},
-            onBackClick = {onBackPressed("-1") },
-            showFilterButton = {false},
-            onFavoriteClick = {}
+            title = { article.title.toString() },
+            showBackButton = { true },
+            onBackClick = { onBackPressed("-1") },
+            showFilterButton = { false },
+            onFilterClicked = {}
         )
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
             loadImage(
                 url = article.urlToImage ?: "",
                 modifier = Modifier

@@ -1,13 +1,11 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class
 )
 
 package com.example.caseapp.ui.home
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -81,6 +79,7 @@ fun HomeScreen(
 
     val articles by viewModel.articles.collectAsStateWithLifecycle()
 
+    // state tutan composable'ımız, görevi ViewModel'dan gelen state'i dinleyip ona göre gerekli composable'ları çizmesi.
     when (articles) {
         is Error -> {
             LoadingDialog(isShowingDialog = { false })
@@ -128,10 +127,9 @@ fun stateLessHomeScreen(
                 title = { "News Headlines" },
                 showBackButton = { false },
                 onBackClick = { },
-                showFilterButton = { true }
-            ) {
-                showPicker = !showPicker
-            }
+                showFilterButton = { true },
+                onFilterClicked = { showPicker = !showPicker }
+            )
             if (showPicker) {
                 CreatePicker { start, end ->
                     Toast.makeText(
@@ -168,12 +166,8 @@ fun stateLessHomeScreen(
             } else {
                 EmptyUI { resetData() }
             }
-
-
         }
-
     }
-
 }
 
 @Composable
@@ -311,7 +305,7 @@ fun TopBar(
     showBackButton: () -> Boolean,
     onBackClick: () -> Unit,
     showFilterButton: () -> Boolean,
-    onFavoriteClick: () -> Unit
+    onFilterClicked: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -352,7 +346,7 @@ fun TopBar(
             )
             if (showFilterButton()) {
                 IconButton(
-                    onClick = { onFavoriteClick() },
+                    onClick = { onFilterClicked() },
                     modifier = Modifier.size(40.dp)
                 ) {
 

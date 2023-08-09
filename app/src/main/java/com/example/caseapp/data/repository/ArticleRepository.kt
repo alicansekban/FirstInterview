@@ -22,6 +22,7 @@ class ArticleRepository @Inject constructor(
             start ?: Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -10) }.time
         val endDate = end ?: Date()
         return flow {
+            // burada yaptıığımız remote dan çekip db'ye ekleme işlemi
             emit(ResultWrapper.Loading)
             when (val apiData = remoteDataSource.getDataFromRemote(startDate, endDate)) {
                 is ResultWrapper.GenericError -> {
@@ -40,6 +41,7 @@ class ArticleRepository @Inject constructor(
                     }
                 }
             }
+            // offline first mantığı ile veriyi sadece db'den çekip domain katmanına gönderiyoruz.
             localDataSource.getArticles(startDate,endDate).collect{
                 emit(ResultWrapper.Success(it))
             }

@@ -23,14 +23,16 @@ class GetArticleUseCase @Inject constructor(
         endDate: Date?
     ): Flow<BaseUIModel<List<ArticleUIModel>>> {
         return flow {
+            // başlangıç için loading gönderiyoruz progress gösterebilmek için
             emit(Loading())
 
-            articleRepository.fetchData(startDate,endDate).collect{
-                when (it) {
+            // repositoryden çektiğimiz result'u uimodel'imize çevirip gerekli dataları mapper yapıyoruz.
+            articleRepository.fetchData(startDate,endDate).collect{ data ->
+                when (data) {
                     is ResultWrapper.GenericError -> { emit(Error("something went wrong"))}
                     ResultWrapper.Loading -> {}
                     ResultWrapper.NetworkError -> { emit(Error("could not retrive data from network"))}
-                    is ResultWrapper.Success -> emit(Success(dataMapper.mapListToUIModel(it.value)))
+                    is ResultWrapper.Success -> emit(Success(data.value.map { article -> dataMapper.mapToUIModel(article) }))
                 }
             }
         }
