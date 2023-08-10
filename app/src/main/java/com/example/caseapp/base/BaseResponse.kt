@@ -7,11 +7,6 @@ data class BaseResponse(
 
     @Json(name = "totalResults")
     val totalResults: Int? = null,
-    @Json(name = "code")
-    val code: String? = null,
-
-    @Json(name = "message")
-    val message: String? = null,
 
     @Json(name = "articles")
     val articles: List<ArticlesItem?>? = null,

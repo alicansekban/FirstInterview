@@ -172,9 +172,7 @@ fun stateLessHomeScreen(
 
 @Composable
 fun CreatePicker(onDateSelected: (Date, Date) -> Unit) {
-    val state = rememberDateRangePickerState(
-
-    )
+    val state = rememberDateRangePickerState()
 
     if (state.selectedStartDateMillis != null && state.selectedEndDateMillis != null) {
         onDateSelected(Date(state.selectedStartDateMillis!!), Date(state.selectedEndDateMillis!!))
