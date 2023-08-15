@@ -17,7 +17,7 @@ class ArticleRepository @Inject constructor(
     private val dataMapper: DataMapper
 ) {
 
-    suspend fun fetchData(start: Date?, end: Date?): Flow<ResultWrapper<List<ArticleEntity>>> {
+    fun fetchData(start: Date?, end: Date?): Flow<ResultWrapper<List<ArticleEntity>>> {
         val startDate =
             start ?: Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, -10) }.time
         val endDate = end ?: Date()
@@ -42,7 +42,7 @@ class ArticleRepository @Inject constructor(
                 }
             }
             // offline first mantığı ile veriyi sadece db'den çekip domain katmanına gönderiyoruz.
-            localDataSource.getArticles(startDate,endDate).collect{
+            localDataSource.getArticles(startDate, endDate).collect {
                 emit(ResultWrapper.Success(it))
             }
         }

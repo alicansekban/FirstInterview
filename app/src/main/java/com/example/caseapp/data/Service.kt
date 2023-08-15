@@ -2,7 +2,6 @@ package com.example.caseapp.data
 
 import com.example.caseapp.base.BaseResponse
 import com.example.caseapp.utils.Constant
-import com.example.caseapp.utils.ResultWrapper
 import retrofit2.http.GET
 import retrofit2.http.Query
 

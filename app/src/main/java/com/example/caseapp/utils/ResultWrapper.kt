@@ -1,11 +1,6 @@
 package com.example.caseapp.utils
 
 import com.example.caseapp.data.ErrorResponse
-import com.squareup.moshi.Moshi
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import java.io.IOException
 
 sealed class ResultWrapper<out T> {
     object Loading : ResultWrapper<Nothing>()

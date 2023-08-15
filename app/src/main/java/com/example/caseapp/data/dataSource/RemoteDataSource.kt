@@ -6,7 +6,6 @@ import com.example.caseapp.utils.ResultWrapper
 import com.example.caseapp.utils.safeApiCall
 import com.example.caseapp.utils.toParsedString
 import kotlinx.coroutines.Dispatchers
-import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
 

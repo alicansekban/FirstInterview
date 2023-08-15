@@ -1,6 +1,5 @@
 package com.example.caseapp.base
 
-import androidx.room.Entity
 import com.squareup.moshi.Json
 
 data class BaseResponse(

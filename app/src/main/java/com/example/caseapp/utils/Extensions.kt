@@ -2,7 +2,6 @@ package com.example.caseapp.utils
 
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.logging.SimpleFormatter
 
 val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
 fun String.toDate() : Date? {

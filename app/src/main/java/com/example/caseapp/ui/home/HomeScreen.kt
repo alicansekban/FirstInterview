@@ -151,7 +151,7 @@ fun stateLessHomeScreen(
                     items(
                         items = articles,
                         key = { article ->
-                            article.title ?: ""
+                            article.id
                         }) { value ->
                         NewsItem(value, openDetail = {
                             openDetail(
